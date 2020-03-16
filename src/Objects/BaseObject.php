@@ -2,9 +2,8 @@
 
 namespace Telegram\Bot\Objects;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use Telegram\Bot\Collection;
+use Telegram\Bot\Helper;
 
 /**
  * Class BaseObject.
@@ -54,22 +53,27 @@ abstract class BaseObject extends Collection
      */
     public function mapRelatives()
     {
-        $relations = collect($this->relations());
+        $relations = $this->relations();
 
-        if ($relations->isEmpty()) {
+        if (empty($relations) || !is_array($relations)) {
             return false;
         }
 
-        return $this->items = collect($this->all())
-            ->map(function ($value, $key) use ($relations) {
-                if (!$relations->has($key)) {
-                    return $value;
+        $results = $this->all();
+        foreach ($results as $key => $data) {
+            foreach ($relations as $property => $class) {
+                if (!is_object($data) && isset($results[$key][$property])) {
+                    $results[$key][$property] = new $class($results[$key][$property]);
+                    continue;
                 }
 
-                $className = $relations->get($key);
-                return new $className($value);
-            })
-            ->all();
+                if ($key === $property) {
+                    $results[$key] = new $class($results[$key]);
+                }
+            }
+        }
+
+        return $this->items = $results;
     }
 
     /**
@@ -91,7 +95,7 @@ abstract class BaseObject extends Collection
      */
     public function getRawResult($data)
     {
-        return Arr::get($data, 'result', $data);
+        return Helper::getItemFromArray($data, 'result', $data);
     }
 
     /**
@@ -101,7 +105,7 @@ abstract class BaseObject extends Collection
      */
     public function getStatus()
     {
-        return Arr::get($this->items, 'ok', false);
+        return Helper::getItemFromArray($this->items, 'ok', false);
     }
 
     /**
@@ -115,18 +119,20 @@ abstract class BaseObject extends Collection
     public function __call($name, $arguments)
     {
         $action = substr($name, 0, 3);
-        if ($action !== 'get') {
-            return false;
-        }
-        $property = Str::snake(substr($name, 3));
-        $response = $this->get($property);
 
-        // Map relative property to an object
-        $relations = $this->relations();
-        if (null != $response && isset($relations[$property])) {
-            return new $relations[$property]($response);
+        if ($action === 'get') {
+            $property = Helper::camelToSnake(substr($name, 3));
+            $response = $this->get($property);
+
+            // Map relative property to an object
+            $relations = $this->relations();
+            if (null != $response && isset($relations[$property])) {
+                return new $relations[$property]($response);
+            }
+
+            return $response;
         }
 
-        return $response;
+        return false;
     }
 }
