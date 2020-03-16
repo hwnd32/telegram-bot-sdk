@@ -11,6 +11,9 @@
 Telegram Bot API - PHP SDK
 ==========================
 
+> Vendor folder is empty! No Laravel Dependencies and Guzzle Client!
+
+
 > Telegram Bot PHP SDK lets you develop Telegram Bots in PHP easily! Supports Laravel out of the box.
 >
 > [Telegram Bot API][link-telegram-bot-api] is an HTTP-based interface created for developers keen on building bots for Telegram.
