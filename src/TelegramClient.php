@@ -5,7 +5,6 @@ namespace Telegram\Bot;
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Telegram\Bot\Exceptions\TelegramSDKException;
-use Telegram\Bot\HttpClients\GuzzleHttpClient;
 use Telegram\Bot\HttpClients\HttpClientInterface;
 
 /**
@@ -38,9 +37,9 @@ class TelegramClient
      *
      * @param HttpClientInterface|null $httpClientHandler
      */
-    public function __construct(HttpClientInterface $httpClientHandler = null)
+    public function __construct(HttpClientInterface $httpClientHandler)
     {
-        $this->httpClientHandler = $httpClientHandler ?: new GuzzleHttpClient();
+        $this->httpClientHandler = $httpClientHandler;
     }
 
     /**

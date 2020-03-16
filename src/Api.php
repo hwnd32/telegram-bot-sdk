@@ -6,7 +6,6 @@ use Telegram\Bot\Commands\CommandBus;
 use Telegram\Bot\Commands\CommandInterface;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\FileUpload\InputFile;
-use Telegram\Bot\HttpClients\GuzzleHttpClient;
 use Telegram\Bot\HttpClients\HttpClientInterface;
 use Telegram\Bot\Objects\File;
 use Telegram\Bot\Objects\Message;
@@ -70,37 +69,12 @@ class Api
 
     /**
      * Instantiates a new Telegram super-class object.
-     *
-     *
-     * @param string                     $token               The Telegram Bot API Access Token.
-     * @param bool                       $async               (Optional) Indicates if the request to Telegram
-     *                                                        will be asynchronous (non-blocking).
-     * @param string|HttpClientInterface $http_client_handler (Optional) Custom HTTP Client Handler.
-     *
-     * @throws TelegramSDKException
+     * @param string              $token The Telegram Bot API Access Token.
+     * @param HttpClientInterface $httpClientHandler
      */
-    public function __construct($token = null, $async = false, $http_client_handler = null)
+    public function __construct($token, HttpClientInterface $httpClientHandler)
     {
-        $this->accessToken = isset($token) ? $token : getenv(static::BOT_TOKEN_ENV_NAME);
-        if (!$this->accessToken) {
-            throw new TelegramSDKException('Required "token" not supplied in config and could not find fallback environment variable "'.static::BOT_TOKEN_ENV_NAME.'"');
-        }
-
-        $httpClientHandler = null;
-        if (isset($http_client_handler)) {
-            if ($http_client_handler instanceof HttpClientInterface) {
-                $httpClientHandler = $http_client_handler;
-            } elseif ($http_client_handler === 'guzzle') {
-                $httpClientHandler = new GuzzleHttpClient();
-            } else {
-                throw new \InvalidArgumentException('The HTTP Client Handler must be set to "guzzle", or be an instance of Telegram\Bot\HttpClients\HttpClientInterface');
-            }
-        }
-
-        if (isset($async)) {
-            $this->setAsyncRequest($async);
-        }
-
+        $this->accessToken = $token;
         $this->client = new TelegramClient($httpClientHandler);
     }
 
