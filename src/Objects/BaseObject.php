@@ -2,7 +2,7 @@
 
 namespace Telegram\Bot\Objects;
 
-use Illuminate\Support\Collection;
+use Telegram\Bot\Collection;
 use Telegram\Bot\Helper;
 
 /**

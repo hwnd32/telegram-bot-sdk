@@ -2,7 +2,6 @@
 
 namespace Telegram\Bot;
 
-use Illuminate\Contracts\Container\Container;
 use Telegram\Bot\Commands\CommandBus;
 use Telegram\Bot\Commands\CommandInterface;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -54,11 +53,6 @@ class Api
      * @var CommandBus|null Telegram Command Bus.
      */
     protected $commandBus = null;
-
-    /**
-     * @var Container IoC Container
-     */
-    protected static $container = null;
 
     /**
      * Timeout of the request in seconds.
@@ -1051,7 +1045,6 @@ class Api
     {
         $action = substr($method, 0, 3);
         if ($action === 'get') {
-            /* @noinspection PhpUndefinedFunctionInspection */
             $class_name = Helper::camelToSnake(substr($method, 3));
             $class = 'Telegram\Bot\Objects\\'.$class_name;
             $response = $this->post($method, $arguments[0] ?: []);
@@ -1064,38 +1057,6 @@ class Api
         }
 
         return false;
-    }
-
-    /**
-     * Set the IoC Container.
-     *
-     * @param $container Container instance
-     *
-     * @return void
-     */
-    public static function setContainer(Container $container)
-    {
-        self::$container = $container;
-    }
-
-    /**
-     * Get the IoC Container.
-     *
-     * @return Container
-     */
-    public function getContainer()
-    {
-        return self::$container;
-    }
-
-    /**
-     * Check if IoC Container has been set.
-     *
-     * @return boolean
-     */
-    public function hasContainer()
-    {
-        return self::$container !== null;
     }
 
     /**

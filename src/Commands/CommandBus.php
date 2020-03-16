@@ -79,12 +79,7 @@ class CommandBus
                     )
                 );
             }
-
-            if ($this->telegram->hasContainer()) {
-                $command = $this->buildDependencyInjectedCommand($command);
-            } else {
-                $command = new $command();
-            }
+            $command = new $command();
         }
 
         if ($command instanceof CommandInterface) {
@@ -198,42 +193,5 @@ class CommandBus
         }
 
         return 'Ok';
-    }
-
-    /**
-     * Use PHP Reflection and Laravel Container to instantiate the command with type hinted dependencies.
-     *
-     * @param $commandClass
-     *
-     * @return object
-     */
-    private function buildDependencyInjectedCommand($commandClass)
-    {
-
-        // check if the command has a constructor
-        if (!method_exists($commandClass, '__construct')) {
-            return new $commandClass();
-        }
-
-        // get constructor params
-        $constructorReflector = new \ReflectionMethod($commandClass, '__construct');
-        $params = $constructorReflector->getParameters();
-
-        // if no params are needed proceed with normal instantiation
-        if (empty($params)) {
-            return new $commandClass();
-        }
-
-        // otherwise fetch each dependency out of the container
-        $container = $this->telegram->getContainer();
-        $dependencies = [];
-        foreach ($params as $param) {
-            $dependencies[] = $container->make($param->getClass()->name);
-        }
-
-        // and instantiate the object with dependencies through ReflectionClass
-        $classReflector = new \ReflectionClass($commandClass);
-
-        return $classReflector->newInstanceArgs($dependencies);
     }
 }

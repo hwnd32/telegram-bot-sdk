@@ -3,8 +3,8 @@
 namespace Telegram\Bot\Commands;
 
 use Telegram\Bot\Api;
+use Telegram\Bot\Helper;
 use Telegram\Bot\Objects\Update;
-use Illuminate\Support\Str;
 
 /**
  * Class Command.
@@ -180,7 +180,7 @@ abstract class Command implements CommandInterface
     {
         $action = substr($method, 0, 9);
         if ($action === 'replyWith') {
-            $reply_name = Str::studly(substr($method, 9));
+            $reply_name = Helper::camelToSnake(substr($method, 9));
             $methodName = 'send'.$reply_name;
 
             if (!method_exists($this->telegram, $methodName)) {
