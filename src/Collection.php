@@ -6,8 +6,9 @@
 
 namespace Telegram\Bot;
 
+use ArrayAccess;
 
-class Collection {
+class Collection implements ArrayAccess {
 
     /**
      * The items contained in the collection.
@@ -49,12 +50,7 @@ class Collection {
     {
         return new static(array_intersect($this->items, $this->getArrayableItems($items)));
     }
-
-    /**
-     * Get the keys of the collection items.
-     *
-     * @return \Illuminate\Support\Collection
-     */
+    
     public function keys()
     {
         return new static(array_keys($this->items));
@@ -110,7 +106,7 @@ class Collection {
      */
     public function _last($array, callable $callback = null, $default = null) {
         if ($callback === null) {
-            return empty($array) ? value($default) : end($array);
+            return empty($array) ? $default : end($array);
         }
 
         return $this->first(array_reverse($array, true), $callback, $default);
@@ -127,7 +123,7 @@ class Collection {
     public function first($array, callable $callback = null, $default = null) {
         if ($callback === null) {
             if (empty($array)) {
-                return value($default);
+                return $default;
             }
 
             foreach ($array as $item) {
@@ -140,7 +136,45 @@ class Collection {
                 return $value;
             }
         }
-        return value($default);
+        return $default;
+    }
+
+    /**
+     * Get an item at a given offset.
+     *
+     * @param  mixed  $key
+     * @return mixed
+     */
+    public function offsetGet($key)
+    {
+        return $this->items[$key];
+    }
+
+    /**
+     * Set the item at a given offset.
+     *
+     * @param  mixed  $key
+     * @param  mixed  $value
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        if ($key === null) {
+            $this->items[] = $value;
+        } else {
+            $this->items[$key] = $value;
+        }
+    }
+
+    /**
+     * Unset the item at a given offset.
+     *
+     * @param  string  $key
+     * @return void
+     */
+    public function offsetUnset($key)
+    {
+        unset($this->items[$key]);
     }
 
     /**
