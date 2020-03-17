@@ -50,7 +50,7 @@ class Collection implements ArrayAccess {
     {
         return new static(array_intersect($this->items, $this->getArrayableItems($items)));
     }
-    
+
     public function keys()
     {
         return new static(array_keys($this->items));

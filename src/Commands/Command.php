@@ -151,6 +151,13 @@ abstract class Command implements CommandInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getAliases() {
+        // TODO: Implement getAliases() method.
+    }
+    
+    /**
      * Helper to Trigger other Commands.
      *
      * @param      $command
