@@ -835,10 +835,21 @@ class Api
      */
     protected function processCommand(Update $update)
     {
+        $commandText = null;
+
         $message = $update->getMessage();
+        if($message !== null) {
+            $commandText = $message->getText();
+        }
+
+        $callbackQuery = $update->getCallbackQuery();
+        if ($callbackQuery !== null) {
+            $commandText = $callbackQuery->getData();
+            $message = $callbackQuery->getMessage();
+        }
 
         if ($message !== null && $message->has('text')) {
-            $this->getCommandBus()->handler($message->getText(), $update);
+            $this->getCommandBus()->handler($commandText, $update);
         }
     }
 
