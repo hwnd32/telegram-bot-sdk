@@ -156,7 +156,7 @@ abstract class Command implements CommandInterface
     public function getAliases() {
         // TODO: Implement getAliases() method.
     }
-    
+
     /**
      * Helper to Trigger other Commands.
      *

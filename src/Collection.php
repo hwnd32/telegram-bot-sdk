@@ -8,7 +8,7 @@ namespace Telegram\Bot;
 
 use ArrayAccess;
 
-class Collection implements ArrayAccess {
+class Collection implements ArrayAccess, Enumerable {
 
     /**
      * The items contained in the collection.
@@ -186,6 +186,8 @@ class Collection implements ArrayAccess {
     protected function getArrayableItems($items) {
         if (is_array($items)) {
             return $items;
+        } elseif ($items instanceof Enumerable) {
+            return $items->all();
         }
         return [$items];
     }

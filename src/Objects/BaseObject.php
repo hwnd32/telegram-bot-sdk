@@ -105,7 +105,7 @@ abstract class BaseObject extends Collection
      */
     public function getStatus()
     {
-        return Helper::getItemFromArray($this->items, 'ok', false);
+        return Helper::getItemFromArray(($this->items, 'ok', false);
     }
 
     /**
