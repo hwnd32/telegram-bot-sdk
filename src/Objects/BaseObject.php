@@ -43,7 +43,7 @@ abstract class BaseObject extends Collection
             return is_array($this->items[$key]) ? new static($this->items[$key]) : $this->items[$key];
         }
 
-        return value($default);
+        return $default;
     }
 
     /**
@@ -105,7 +105,7 @@ abstract class BaseObject extends Collection
      */
     public function getStatus()
     {
-        return Helper::getItemFromArray(($this->items, 'ok', false);
+        return Helper::getItemFromArray($this->items, 'ok', false);
     }
 
     /**
