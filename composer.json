@@ -1,7 +1,7 @@
 {
   "name": "kondratyev/telegram-bot-sdk",
   "description": "The Lightweight Telegram Bot API PHP SDK. Without Laravel/etc Dependencies",
-  "keywords": ["telegram", "telegram bot", "telegram bot api", "telegram sdk", "telegram php", "laravel telegram", "laravel"],
+  "keywords": ["telegram", "telegram bot", "telegram bot api", "telegram sdk", "telegram php"],
   "type": "library",
   "homepage": "https://github.com/hwnd32/telegram-bot-sdk",
   "license": "BSD-3-Clause",
