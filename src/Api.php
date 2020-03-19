@@ -846,6 +846,7 @@ class Api
         if ($callbackQuery !== null) {
             $commandText = $callbackQuery->getData();
             $message = $callbackQuery->getMessage();
+            $update = new Update($callbackQuery);
         }
 
         if ($message !== null && $message->has('text')) {
